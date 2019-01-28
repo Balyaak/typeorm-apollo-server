@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 import { Redis } from "ioredis";
 
 export interface Session extends Express.Session {
@@ -9,4 +9,5 @@ export interface Context {
   req: Request;
   session: Session;
   redis: Redis;
+  res: Response;
 }

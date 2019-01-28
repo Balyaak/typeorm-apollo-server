@@ -1,5 +1,5 @@
 import { InputType, Field } from "type-graphql";
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import { IsEmail, MinLength, MaxLength, IsString } from "class-validator";
 
 @InputType()

@@ -10,7 +10,8 @@
     "@types/graphql": "^14.0.5",
     "@types/ioredis": "^4.0.5",
     "@types/node": "^10.12.18",
-    "ts-node": "7.0.1",
+    "ts-node": "^8.0.2",
+    "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "3.2.4"
   },
   "dependencies": {
@@ -20,7 +21,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "graphql": "^14.1.1",
+    "graphql-query-complexity": "^0.2.2",
     "ioredis": "^4.5.1",
     "mysql": "^2.16.0",
     "pg": "^7.8.0",
@@ -29,6 +30,6 @@
     "typeorm": "0.2.11"
   },
   "scripts": {
-    "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
+    "start": "NODE_ENV=development ts-node-dev --respawn src/index.ts"
   }
 }
