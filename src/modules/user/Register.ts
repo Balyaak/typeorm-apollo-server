@@ -3,6 +3,8 @@ import { Resolver, Mutation, Arg, Query, Ctx, Authorized } from "type-graphql";
 import { User } from "../../entity/User";
 import { RegisterInput } from "./inputs/RegisterInput";
 import { Context } from "../types/Context";
+import { sendEmail } from "../utils/sendEmail";
+import { createConfirmationUrl } from "../utils/createConfirmationUrl";
 
 @Resolver()
 export class RegisterResolver {
@@ -20,18 +22,21 @@ export class RegisterResolver {
     email,
     password
   }: RegisterInput): Promise<User | null> {
-    const user = await User.findOne({
+    const possibleUser = await User.findOne({
       where: { email }
     });
 
-    if (user) {
+    if (possibleUser) {
       return null;
     }
 
-    await User.create({
+    const user = await User.create({
       email,
       password
     }).save();
+
+    await sendEmail(email, await createConfirmationUrl(user.id));
+
     return user;
   }
 }

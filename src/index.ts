@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import "dotenv/config";
-import * as express from "express";
+import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import * as session from "express-session";
-import * as connectRedis from "connect-redis";
-import * as cors from "cors";
-import * as Redis from "ioredis";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import cors from "cors";
+
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 import { customAuthChecker } from "./utils/authChecker";
@@ -13,15 +13,12 @@ import queryComplexity, {
   fieldConfigEstimator,
   simpleEstimator
 } from "graphql-query-complexity";
-
-const RedisStore = connectRedis(session as any);
+import { redis } from "./redis";
 
 const startServer = async () => {
   await createConnection();
-
+  const RedisStore = connectRedis(session);
   const app = express();
-
-  const redis = new Redis();
 
   const server = new ApolloServer({
     schema: await buildSchema({
@@ -90,6 +87,10 @@ const startServer = async () => {
   );
 
   server.applyMiddleware({ app });
+
+  app.get("/", (_, res) => {
+    res.redirect("/graphql");
+  });
 
   app.listen({ port: 4000 }, () => {
     console.log("server online");

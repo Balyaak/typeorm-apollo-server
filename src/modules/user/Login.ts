@@ -10,7 +10,7 @@ export class LoginResolver {
   async login(
     @Arg("input") { email, password }: LoginInput,
     @Ctx() { req, session, redis }: Context
-  ): Promise<User | null> {
+  ): Promise<User | null | boolean> {
     if (req.session!.userId) {
       return null;
     }
@@ -20,7 +20,12 @@ export class LoginResolver {
       return null;
     }
 
+    if (!user.confirmed) {
+      return user.confirmed;
+    }
+
     const passwordValid = argon2.verify(user.password, password);
+
     if (!passwordValid) {
       return null;
     }

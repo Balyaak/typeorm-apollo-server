@@ -1,5 +1,5 @@
 import { Resolver, Ctx, Arg, Mutation, Authorized } from "type-graphql";
-import { Context } from "apollo-server-core";
+import { Context } from "../types/Context";
 
 @Resolver()
 export class LogoutResolver {
@@ -11,7 +11,7 @@ export class LogoutResolver {
   ): Promise<Boolean> {
     const sessionIds = await redis.lrange(`sess:${session.userId}`, 0, -1);
     if (logoutAll) {
-      const promises = [];
+      const promises: any[] = [];
       for (const sessionId of sessionIds) {
         promises.push(redis.del(`sess:${sessionId}`));
       }
