@@ -5,15 +5,17 @@ import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
-
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
-import { customAuthChecker } from "./utils/authChecker";
 import queryComplexity, {
   fieldConfigEstimator,
   simpleEstimator
 } from "graphql-query-complexity";
+import RateLimit from "express-rate-limit";
+import * as RateLimitRedisStore from "rate-limit-redis";
+
 import { redis } from "./redis";
+import { customAuthChecker } from "./utils/authChecker";
 
 const startServer = async () => {
   await createConnection();
@@ -63,6 +65,15 @@ const startServer = async () => {
     ]
   });
 
+  app.use(
+    new RateLimit({
+      store: new RateLimitRedisStore({
+        client: redis
+      }),
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100 // limit each IP to 100 requests per windowMs
+    })
+  );
   app.use(
     cors({
       credentials: true,
