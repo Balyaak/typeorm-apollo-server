@@ -1,17 +1,25 @@
-import { Resolver, Mutation, Arg, Query, Ctx, Authorized } from "type-graphql";
+import {
+  Resolver,
+  Mutation,
+  Arg,
+  Query,
+  Ctx,
+  UseMiddleware
+} from "type-graphql";
 
 import { User } from "../../entity/User";
 import { RegisterInput } from "./inputs/RegisterInput";
 import { Context } from "../types/Context";
 import { sendEmail } from "../utils/sendEmail";
 import { createConfirmationUrl } from "../utils/createConfirmationUrl";
+import { isLoggedIn } from "../middleware/isLoggedIn";
 
 @Resolver()
 export class RegisterResolver {
   constructor() {}
 
   @Query(() => User, { nullable: true })
-  @Authorized()
+  @UseMiddleware(isLoggedIn)
   async me(@Ctx() { session }: Context) {
     return User.findOne({ where: { id: session.userId } });
   }

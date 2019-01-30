@@ -1,9 +1,10 @@
-import { Resolver, Ctx, Arg, Mutation, Authorized } from "type-graphql";
+import { Resolver, Ctx, Arg, Mutation, UseMiddleware } from "type-graphql";
 import { Context } from "../types/Context";
+import { isLoggedIn } from "../middleware/isLoggedIn";
 
 @Resolver()
 export class LogoutResolver {
-  @Authorized()
+  @UseMiddleware(isLoggedIn)
   @Mutation(() => Boolean)
   async logout(
     @Arg("logoutAll") logoutAll: boolean,
