@@ -24,7 +24,8 @@ export class LoginResolver {
       return user.confirmed;
     }
 
-    const passwordValid = argon2.verify(user.password, password);
+    const passwordValid = await argon2.verify(user.password, password);
+    console.log(passwordValid);
 
     if (!passwordValid) {
       return null;
