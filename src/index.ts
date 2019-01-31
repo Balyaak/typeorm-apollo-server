@@ -12,7 +12,7 @@ import queryComplexity, {
   simpleEstimator
 } from "graphql-query-complexity";
 import RateLimit from "express-rate-limit";
-import * as RateLimitRedisStore from "rate-limit-redis";
+import RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
 import { customAuthChecker } from "./utils/authChecker";
