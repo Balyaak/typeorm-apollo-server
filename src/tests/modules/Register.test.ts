@@ -14,7 +14,7 @@ afterAll(async () => {
   await connection.close();
 });
 
-const registerMutuation = `
+const registerMutation = `
 mutation Register($input: RegisterInput!) {
     register(
       input: $input
@@ -32,7 +32,7 @@ describe("Register test", () => {
   };
   it("Registeration with new credentials", async () => {
     const response = await graphqlCall({
-      source: registerMutuation,
+      source: registerMutation,
       variableValues: { input: user }
     });
     expect(response).toMatchObject({
@@ -51,7 +51,7 @@ describe("Register test", () => {
 
   it("Register with duplicate email", async () => {
     const response = await graphqlCall({
-      source: registerMutuation,
+      source: registerMutation,
       variableValues: { input: user }
     });
 
@@ -64,7 +64,7 @@ describe("Register test", () => {
       password: faker.internet.password()
     };
     const response = await graphqlCall({
-      source: registerMutuation,
+      source: registerMutation,
       variableValues: { input: invalidUser }
     });
 
@@ -77,7 +77,7 @@ describe("Register test", () => {
       password: "pass"
     };
     const response = await graphqlCall({
-      source: registerMutuation,
+      source: registerMutation,
       variableValues: { input: invalidUser }
     });
     expect(response.errors![0].message).toMatch("Argument Validation Error");
