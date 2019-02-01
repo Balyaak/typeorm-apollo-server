@@ -6,7 +6,6 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import { createConnection } from "typeorm";
-import { buildSchema } from "type-graphql";
 import queryComplexity, {
   fieldConfigEstimator,
   simpleEstimator
@@ -15,7 +14,8 @@ import RateLimit from "express-rate-limit";
 import RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
-import { customAuthChecker } from "./utils/authChecker";
+import { createSchema } from "./utils/createSchema";
+import { formatArgumentValidationError } from "type-graphql";
 
 const startServer = async () => {
   await createConnection();
@@ -23,10 +23,7 @@ const startServer = async () => {
   const app = express();
 
   const server = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [__dirname + "/modules/user/*.*"],
-      authChecker: customAuthChecker
-    }),
+    schema: await createSchema(),
     context: ({ req, res }: any) => ({
       req,
       session: req.session,
@@ -62,7 +59,8 @@ const startServer = async () => {
           })
         ]
       }) as any
-    ]
+    ],
+    formatError: formatArgumentValidationError
   });
 
   app.use(
