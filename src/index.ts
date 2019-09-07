@@ -15,7 +15,6 @@ import RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
-import { formatArgumentValidationError } from "type-graphql";
 
 const startServer = async () => {
   await createConnection();
@@ -30,21 +29,6 @@ const startServer = async () => {
       redis,
       res
     }),
-    playground: {
-      settings: {
-        // put in entire setting object because of bug with Typscript and apollo-server (issue #1713)
-        "general.betaUpdates": false,
-        "editor.cursorShape": "line",
-        "editor.fontSize": 14,
-        "editor.fontFamily":
-          "'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace",
-        "editor.theme": "dark",
-        "editor.reuseHeaders": true,
-        "prettier.printWidth": 80,
-        "request.credentials": "same-origin",
-        "tracing.hideTracingResponse": true
-      }
-    },
     validationRules: [
       queryComplexity({
         maximumComplexity: 8,
@@ -59,8 +43,7 @@ const startServer = async () => {
           })
         ]
       }) as any
-    ],
-    formatError: formatArgumentValidationError
+    ]
   });
 
   app.use(

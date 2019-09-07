@@ -1,8 +1,9 @@
 import { Resolver, Mutation, Ctx, Arg } from "type-graphql";
 import * as argon2 from "argon2";
 import { LoginInput } from "./inputs/LoginInput";
-import { Context } from "apollo-server-core";
+
 import { User } from "../../entity/User";
+import { Context } from "../types/Context";
 
 @Resolver()
 export class LoginResolver {
