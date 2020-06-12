@@ -18,7 +18,7 @@ import { createSchema } from "./utils/createSchema";
 
 const startServer = async () => {
   await createConnection();
-  const RedisStore = connectRedis(session);
+  const RedisStore = connectRedis(session as any)
   const app = express();
 
   const server = new ApolloServer({
